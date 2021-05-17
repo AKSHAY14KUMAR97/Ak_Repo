@@ -28,15 +28,6 @@ namespace BinarySearchTree
             root = null;
         }
 
-        public Node Search(int key)
-        {
-            return null;
-        }
-
-        public Node FindSucc(int key)
-        {
-            return null;
-        }
         void Insert(int key)
         {
             root = InsertData(root, key);
@@ -114,6 +105,66 @@ namespace BinarySearchTree
                 FindPredSuccecessor(root.right, key);
             }
         }
+        void Inorder()
+        {
+            InorderRec(root);
+        }
+
+        private void InorderRec(Node root)
+        {
+            if(root!=null)
+            {
+                InorderRec(root.left);
+                Console.WriteLine(root.key + " ");
+                InorderRec(root.right);
+            }
+        }
+
+        private void DeleteKey(int key)
+        {
+            root = deleteRec(root, key);
+        }
+
+        private Node deleteRec(Node root, int key)
+        {
+            if (root == null)
+                return root;
+            if(key<root.key)
+            {
+                root.left = deleteRec(root.left, key);
+            }
+            else if(key>root.key)
+            {
+                root.right = deleteRec(root.right, key);
+            }
+            else
+            {
+                if (root.left == null)
+                {
+                    return root.right;
+                }
+                else if (root.right == null)
+                {
+                    return root.left;
+                }
+
+                root.key = MinValue(root.right);
+                root.right = deleteRec(root.right, key);
+            }
+            return root;
+        }
+
+        private int MinValue(Node root)
+        {
+            int min = root.key;
+            while (root.left != null)
+            {
+                min = root.left.key;
+                root = root.left;
+            }
+            return min;
+        }
+
         public static void Main(string[] args)
         {
             BinaryTree binaryTree = new BinaryTree();
@@ -124,7 +175,8 @@ namespace BinarySearchTree
             binaryTree.Insert(70);
             binaryTree.Insert(60);
             binaryTree.Insert(80);
-     
+            Console.WriteLine("Inorder traversal of the given tree");
+            binaryTree.Inorder();
             FindPredSuccecessor(binaryTree.root, 70);
             if (pre != null)
                 Console.WriteLine("Predecessor is " + pre.key);
@@ -135,6 +187,14 @@ namespace BinarySearchTree
                 Console.WriteLine("Successor is " + suc.key);
             else
                 Console.WriteLine("No Successor");
+
+            Console.WriteLine("\nDelete 20");
+            binaryTree.DeleteKey(20);
+            Console.WriteLine(
+                "Inorder traversal of the modified tree");
+            binaryTree.Inorder();
+
+
         }
     }
 }
