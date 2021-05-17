@@ -13,6 +13,8 @@ namespace BinarySearchTree
             public int key;
             public Node left, right;
 
+            public Node()
+            { }
             public Node(int item)
             {
                 key = item;
@@ -72,24 +74,67 @@ namespace BinarySearchTree
             }
             return root;
         }
+        static Node pre = new Node(), suc = new Node();
+
+        static void FindPredSuccecessor(Node root,int key)
+        {
+            if (root == null)
+                return;
+            if(root.key == key)
+            {
+                if (root.left != null)
+                {
+                    Node temp = root.left;
+                    while(temp.right != null)
+                    {
+                        temp = temp.right;
+                    }
+                    pre = temp;
+                }
+                if(root.right != null)
+                {
+                    Node temp = root.right;
+                    while(temp.left != null)
+                    {
+                        temp = temp.left;
+                    }
+                    suc = temp;
+
+                }
+                return;
+            }
+            if(root.key > key)
+            {
+                suc = root;
+                FindPredSuccecessor(root.left, key);
+            }
+            else
+            {
+                pre = root;
+                FindPredSuccecessor(root.right, key);
+            }
+        }
         public static void Main(string[] args)
         {
             BinaryTree binaryTree = new BinaryTree();
+            binaryTree.Insert(50);
+            binaryTree.Insert(30);
             binaryTree.Insert(20);
-            binaryTree.Insert(10);
-            binaryTree.Insert(25);
-            binaryTree.Insert(5);
-            binaryTree.Insert(22);
-            binaryTree.Insert(7);
-            binaryTree.Insert(6);
-            binaryTree.Insert(19);
-            binaryTree.Insert(26);
-            binaryTree.Insert(2);
-            binaryTree.Insert(1);
-            binaryTree.Insert(4);
-            binaryTree.Insert(16);
-            binaryTree.Insert(19);
-            binaryTree.Search(6);
+            binaryTree.Insert(40);
+            binaryTree.Insert(70);
+            binaryTree.Insert(60);
+            binaryTree.Insert(80);
+     
+            FindPredSuccecessor(binaryTree.root, 70);
+            if (pre != null)
+                Console.WriteLine("Predecessor is " + pre.key);
+            else
+                Console.WriteLine("No Predecessor");
+
+            if (suc != null)
+                Console.WriteLine("Successor is " + suc.key);
+            else
+                Console.WriteLine("No Successor");
         }
     }
 }
